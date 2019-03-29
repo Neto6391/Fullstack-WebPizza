@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 29/03/2019 às 00:46
+-- Tempo de geração: 29/03/2019 às 01:01
 -- Versão do servidor: 10.1.37-MariaDB
 -- Versão do PHP: 7.3.1
 
@@ -185,6 +185,26 @@ INSERT INTO `size_pizza` (`id`, `description`, `price_size`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `stock_product`
+--
+
+CREATE TABLE `stock_product` (
+  `id` int(10) NOT NULL,
+  `product_pasta` int(10) NOT NULL,
+  `product_drink` int(10) NOT NULL,
+  `date_stock_out` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Despejando dados para a tabela `stock_product`
+--
+
+INSERT INTO `stock_product` (`id`, `product_pasta`, `product_drink`, `date_stock_out`) VALUES
+(1, 3, 1, '2019-03-28 23:59:15');
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `type_user`
 --
 
@@ -282,6 +302,14 @@ ALTER TABLE `size_pizza`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Índices de tabela `stock_product`
+--
+ALTER TABLE `stock_product`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `stock_product_pasta` (`product_pasta`),
+  ADD KEY `stock_product_drink` (`product_drink`);
+
+--
 -- Índices de tabela `type_user`
 --
 ALTER TABLE `type_user`
@@ -341,6 +369,12 @@ ALTER TABLE `size_pizza`
   MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de tabela `stock_product`
+--
+ALTER TABLE `stock_product`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de tabela `type_user`
 --
 ALTER TABLE `type_user`
@@ -372,6 +406,13 @@ ALTER TABLE `request_product`
   ADD CONSTRAINT `request_product_drink` FOREIGN KEY (`product_drink`) REFERENCES `product_drink` (`id`),
   ADD CONSTRAINT `request_product_size` FOREIGN KEY (`product_size`) REFERENCES `size_pizza` (`id`),
   ADD CONSTRAINT `request_user` FOREIGN KEY (`request_user`) REFERENCES `users` (`id`);
+
+--
+-- Restrições para tabelas `stock_product`
+--
+ALTER TABLE `stock_product`
+  ADD CONSTRAINT `stock_product_drink` FOREIGN KEY (`product_drink`) REFERENCES `product_drink` (`id`),
+  ADD CONSTRAINT `stock_product_pasta` FOREIGN KEY (`product_pasta`) REFERENCES `product_pasta` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
