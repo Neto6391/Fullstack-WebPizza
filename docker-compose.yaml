@@ -1,0 +1,56 @@
+version: '3.1'
+services:
+  nginx:
+    container_name: server_application
+    image: nginx:1.15.10-alpine
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app-backend
+    networks: 
+      - nginx-server
+  
+  db-app:
+    container_name: db-wb-pizza
+    image: mysql:5.7
+    volumes:
+      - mysql-data:/data/db
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_ROOT_PASSWORD: hellowbpizza
+    ports:
+      - "3306:3306"
+    restart: always
+    networks: 
+      - db-application
+  
+  app-backend:
+    container_name: app-backend
+    restart: always
+    build: ./app
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - $HOME/.m2:/root/.m2
+    expose:
+      - "8080"
+    command: mvn clean spring-boot:run
+    depends_on:
+      - db-app
+    networks: 
+      - nginx-server
+      - db-application
+volumes:
+  mysql-data:
+networks: 
+  nginx-server:
+    driver: bridge
+  db-application:
+    driver: bridge
+
+    
+  
